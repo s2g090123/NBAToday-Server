@@ -52,7 +52,6 @@ private suspend fun HttpClient.statsRequest(
     endpoint: String,
     block: HttpRequestBuilder.() -> Unit
 ): HttpResponse {
-    cookies("http://0.0.0.0:8080/")
     return request("$STATS_BASE_URL/$endpoint") {
         statsBuilder(block)
     }
@@ -62,7 +61,6 @@ private suspend fun HttpClient.cdnRequest(
     endpoint: String,
     block: HttpRequestBuilder.() -> Unit
 ): HttpResponse {
-    cookies("http://0.0.0.0:8080/")
     return request("$CDN_BASE_URL/$endpoint") {
         apply(block)
     }
