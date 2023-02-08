@@ -3,6 +3,7 @@ package com.example.plugins
 import com.example.routes.gameRouting
 import com.example.routes.playerRouting
 import com.example.routes.teamRouting
+import com.example.routes.userRouting
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
@@ -12,6 +13,7 @@ fun Application.configureRouting() {
             playerRouting()
             teamRouting()
             gameRouting()
+            userRouting()
         }
     }
 }

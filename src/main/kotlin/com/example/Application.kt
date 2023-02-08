@@ -1,6 +1,7 @@
 package com.example
 
 import com.example.client.client
+import com.example.database.DatabaseFactory
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSerialization
 import io.ktor.client.plugins.cookies.*
@@ -18,6 +19,7 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureSerialization()
     configureRouting()
 }
