@@ -13,7 +13,8 @@ class UserDaoImp : UserDao {
             name = this[UserTable.name],
             points = this[UserTable.points],
             password = this[UserTable.password],
-            token = this[UserTable.token]
+            token = this[UserTable.token],
+            lastLogin = this[UserTable.lastLogin]
         )
     }
 
@@ -42,6 +43,7 @@ class UserDaoImp : UserDao {
             it[points] = user.points
             it[password] = user.password
             it[token] = user.token
+            it[lastLogin] = user.lastLogin
         }.resultedValues?.singleOrNull()?.toUser()
     }
 
@@ -70,6 +72,13 @@ class UserDaoImp : UserDao {
         UserTable
             .update({ UserTable.account eq account }) {
                 it[UserTable.password] = password
+            } > 0
+    }
+
+    override suspend fun editLastLogin(account: String, token: String, lastLogin: Long): Boolean = dbQuery {
+        UserTable
+            .update({ (UserTable.account eq account) and (UserTable.token eq token) }) {
+                it[UserTable.lastLogin] = lastLogin
             } > 0
     }
 

@@ -8,5 +8,6 @@ data class User(
     val name: String,
     val points: Long,
     val password: String,
-    val token: String
+    val token: String,
+    val lastLogin: Long
 )

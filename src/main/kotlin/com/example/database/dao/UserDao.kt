@@ -11,5 +11,6 @@ interface UserDao {
     suspend fun editPoints(account: String, points: Long, token: String): Boolean
     suspend fun editToken(account: String, token: String): Boolean
     suspend fun editPassword(account: String, password: String): Boolean
+    suspend fun editLastLogin(account: String, token: String, lastLogin: Long): Boolean
     suspend fun deleteUser(account: String): Boolean
 }

@@ -8,6 +8,7 @@ object UserTable : Table() {
     val points = long("points")
     val password = varchar("password", 128)
     val token = varchar("token", 128)
+    val lastLogin = long("last_login")
 
     override val primaryKey: PrimaryKey = PrimaryKey(account)
 }

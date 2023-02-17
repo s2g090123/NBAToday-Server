@@ -11,6 +11,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.util.*
 
 fun Route.userRouting() {
     route("user") {
@@ -28,7 +29,8 @@ fun Route.userRouting() {
                 "User had not been created or password is wrong!",
                 status = HttpStatusCode.BadRequest
             )
-            call.respond(user)
+            val loginUser = onLogin(user)
+            call.respond(loginUser)
         }
         post("register") {
             val loginBody = call.receive<LoginBody>()
@@ -42,18 +44,26 @@ fun Route.userRouting() {
             )
             val user = userDao.user(account)
             val response = if (user == null) {
-                userDao.addUser(User(account, "User", 0, password, Utils.createToken(account, password)))
-                    ?: return@post call.respondText(
-                        "Register failed",
-                        status = HttpStatusCode.BadRequest
+                userDao.addUser(
+                    User(
+                        account = account,
+                        name = "User",
+                        points = 1000,
+                        password = password,
+                        token = Utils.createToken(account, password),
+                        lastLogin = System.currentTimeMillis()
                     )
+                ) ?: return@post call.respondText(
+                    "Register failed",
+                    status = HttpStatusCode.BadRequest
+                )
             } else if (user.password != password) {
                 return@post call.respondText(
                     "User had been created!",
                     status = HttpStatusCode.BadRequest
                 )
             } else {
-                user
+                onLogin(user)
             }
             call.respond(response)
         }
@@ -130,4 +140,34 @@ fun Route.userRouting() {
             }
         }
     }
+}
+
+private suspend fun onLogin(user: User): User {
+    val account = user.account
+    val password = user.password
+    var point = user.points
+    val lastLogin = System.currentTimeMillis()
+
+    val token = Utils.createToken(account, password)
+    userDao.editToken(account, token)
+
+    val cal = Utils.getCalendar()
+    val currentYear = cal.get(Calendar.YEAR)
+    val currentMonth = cal.get(Calendar.MONTH)
+    val currentDay = cal.get(Calendar.DAY_OF_MONTH)
+    cal.timeInMillis = user.lastLogin
+    if (cal.get(Calendar.YEAR) != currentYear || cal.get(Calendar.MONTH) != currentMonth || cal.get(Calendar.DAY_OF_MONTH) < currentDay) {
+        point += 100
+        userDao.editPoints(account, point, token)
+    }
+
+    userDao.editLastLogin(user.account, user.token, lastLogin)
+    return User(
+        account = account,
+        name = user.name,
+        points = point,
+        password = password,
+        token = token,
+        lastLogin = lastLogin
+    )
 }
