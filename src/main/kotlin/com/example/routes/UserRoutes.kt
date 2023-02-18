@@ -147,9 +147,7 @@ private suspend fun onLogin(user: User): User {
     val password = user.password
     var point = user.points
     val lastLogin = System.currentTimeMillis()
-
     val token = Utils.createToken(account, password)
-    userDao.editToken(account, token)
 
     val cal = Utils.getCalendar()
     val currentYear = cal.get(Calendar.YEAR)
@@ -161,7 +159,8 @@ private suspend fun onLogin(user: User): User {
         userDao.editPoints(account, point, token)
     }
 
-    userDao.editLastLogin(user.account, user.token, lastLogin)
+    userDao.editToken(account, token)
+    userDao.editLastLogin(account, token, lastLogin)
     return User(
         account = account,
         name = user.name,
