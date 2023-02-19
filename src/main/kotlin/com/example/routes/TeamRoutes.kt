@@ -14,7 +14,7 @@ import io.ktor.server.routing.*
 fun Route.teamRouting() {
     route("team") {
         get("{id}/players") {
-            val season = call.request.queryParameters["season"] ?: return@get call.respondText(
+            val season = call.parameters["season"] ?: return@get call.respondText(
                 "Missing season",
                 status = HttpStatusCode.BadRequest
             )
@@ -27,7 +27,7 @@ fun Route.teamRouting() {
             call.respond(body)
         }
         get("stats") {
-            val season = call.request.queryParameters["season"] ?: return@get call.respondText(
+            val season = call.parameters["season"] ?: return@get call.respondText(
                 "Missing season",
                 status = HttpStatusCode.BadRequest
             )

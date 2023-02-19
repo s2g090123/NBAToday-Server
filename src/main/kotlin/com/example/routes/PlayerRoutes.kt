@@ -16,11 +16,11 @@ import kotlinx.coroutines.async
 fun Route.playerRouting() {
     route("player") {
         get("detail") {
-            val season = call.request.queryParameters["season"] ?: return@get call.respondText(
+            val season = call.parameters["season"] ?: return@get call.respondText(
                 "Missing season",
                 status = HttpStatusCode.BadRequest
             )
-            val id = call.request.queryParameters["id"] ?: return@get call.respondText(
+            val id = call.parameters["id"] ?: return@get call.respondText(
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )
@@ -37,11 +37,11 @@ fun Route.playerRouting() {
             call.respond(PlayerDetail(info, stats))
         }
         get("stats") {
-            val season = call.request.queryParameters["season"] ?: return@get call.respondText(
+            val season = call.parameters["season"] ?: return@get call.respondText(
                 "Missing season",
                 status = HttpStatusCode.BadRequest
             )
-            val id = call.request.queryParameters["id"] ?: return@get call.respondText(
+            val id = call.parameters["id"] ?: return@get call.respondText(
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )
@@ -50,7 +50,7 @@ fun Route.playerRouting() {
             call.respond(body)
         }
         get("info") {
-            val id = call.request.queryParameters["id"] ?: return@get call.respondText(
+            val id = call.parameters["id"] ?: return@get call.respondText(
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )

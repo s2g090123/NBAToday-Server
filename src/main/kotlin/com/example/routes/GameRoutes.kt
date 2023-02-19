@@ -19,7 +19,7 @@ import java.util.*
 fun Route.gameRouting() {
     route("game") {
         get("scoreboard") {
-            val leagueId = call.request.queryParameters["leagueID"] ?: "00"
+            val leagueId = call.parameters["leagueID"] ?: "00"
             val gameDate = call.parameters["gameDate"] ?: return@get call.respondText(
                 "Missing gameDate",
                 status = HttpStatusCode.BadRequest
@@ -29,7 +29,7 @@ fun Route.gameRouting() {
             call.respond(body)
         }
         get("scoreboards") {
-            val leagueId = call.request.queryParameters["leagueID"] ?: "00"
+            val leagueId = call.parameters["leagueID"] ?: "00"
             val year = call.parameters["year"]?.toIntOrNull() ?: return@get call.respondText(
                 "Missing year or year is wrong",
                 status = HttpStatusCode.BadRequest
