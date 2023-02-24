@@ -149,6 +149,9 @@ private suspend fun onLogin(user: User): User {
     val lastLogin = System.currentTimeMillis()
     val token = Utils.createToken(account, password)
 
+    userDao.editToken(account, token)
+    userDao.editLastLogin(account, token, lastLogin)
+
     val cal = Utils.getCalendar()
     val currentYear = cal.get(Calendar.YEAR)
     val currentMonth = cal.get(Calendar.MONTH)
@@ -158,9 +161,6 @@ private suspend fun onLogin(user: User): User {
         point += 100
         userDao.editPoints(account, point, token)
     }
-
-    userDao.editToken(account, token)
-    userDao.editLastLogin(account, token, lastLogin)
     return User(
         account = account,
         name = user.name,
